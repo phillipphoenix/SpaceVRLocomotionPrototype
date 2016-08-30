@@ -8,10 +8,16 @@ public class GrabMovement : MonoBehaviour
     public SteamVR_TrackedController Controller;
     public Transform CameraRig;
 
+    [SerializeField]
+    private DistanceGrab _distanceGrab;
+
     public float Distance;
 
     private Rigidbody _jointTarget;
     private SpringJoint _springJoint;
+    private GameObject arm;
+    [SerializeField] private GameObject _fakeArmPrefab;
+    [SerializeField] private Transform _shoulderPos;
 
     private bool _isHolding;
 
@@ -70,6 +76,9 @@ public class GrabMovement : MonoBehaviour
     {
         if (_jointTarget != null)
         {
+            _distanceGrab.Start(_jointTarget);
+
+            /*
             _springJoint = CameraRig.gameObject.AddComponent<SpringJoint>();
             _springJoint.spring = 50;
             _springJoint.damper = 50;
@@ -78,14 +87,18 @@ public class GrabMovement : MonoBehaviour
 
             _springJoint.connectedBody = _jointTarget;
             _isHolding = true;
+            */
         }
     }
 
     private void TriggerUnclicked(object sender, ClickedEventArgs e)
     {
+        _distanceGrab.Stop();
+        /*
         Destroy(_springJoint);
         _springJoint = null;
         _isHolding = false;
+        */
     }
 
     private void OnDrawGizmos()
