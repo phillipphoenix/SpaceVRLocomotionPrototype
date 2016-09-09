@@ -3,22 +3,20 @@ using System.Collections;
 
 public class AnchorUpdate : MonoBehaviour
 {
+    [SerializeField] private Transform leftShoulder;
+    [SerializeField] private Transform rightShoulder;
 
-    private SpringJoint _jointLeft;
-    private SpringJoint _joinRight;
-
+    public Vector3 leftShoulderLocalPos;
+    public Vector3 rightShoulderLocalPos;
+    
     // Use this for initialization
     void Start () {
-	
-	}
+    }
 	
 	// Update is called once per frame
 	void Update ()
 	{
-	    SpringJoint[] joints = transform.root.GetComponents<SpringJoint>();
-	    foreach (var joint in joints)
-	    {
-	        joint.anchor = transform.localPosition;
-	    }
-    }
+	    leftShoulderLocalPos = leftShoulder.position - transform.position;
+        rightShoulderLocalPos = rightShoulder.position - transform.position;
+	}
 }
