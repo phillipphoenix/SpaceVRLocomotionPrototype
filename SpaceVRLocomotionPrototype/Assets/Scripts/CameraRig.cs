@@ -5,6 +5,7 @@ public class CameraRig : MonoBehaviour
 {
 
     [SerializeField] private Rigidbody rBody;
+    [SerializeField] private float releaseForceMultiplier = 10;
 
     private Vector3 lastPosition;
     private Vector3 currentVelocity;
@@ -18,15 +19,14 @@ public class CameraRig : MonoBehaviour
 	{
 	    rBody.centerOfMass = new Vector3(0, 1, 0);
 
-        currentVelocity = (lastPosition - transform.position) / Time.deltaTime;
+        currentVelocity = (transform.position - lastPosition) / Time.deltaTime;
 	    lastPosition = transform.position;
 
-        Debug.Log(rBody.velocity);
+        //Debug.Log(rBody.velocity);
     }
 
     public void Release()
     {
-        rBody.velocity = currentVelocity;
-
+        rBody.velocity = currentVelocity * releaseForceMultiplier;
     }
 }

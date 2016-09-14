@@ -7,7 +7,7 @@ public class GrabPoint : MonoBehaviour
     private Rigidbody playerJoint;
     private Rigidbody rig;
 
-    private float distance;
+    private float orgDistance;
     private Vector3 direction;
 
     private bool draw;
@@ -27,19 +27,28 @@ public class GrabPoint : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-	
+	    
 	}
 
     public void Grab(float distance)
     {
         draw = true;
         joint.connectedBody = playerJoint;
-        this.distance = distance;
-        direction = (playerJoint.position - transform.position).normalized;
-        Vector3 anchorPoint = Vector3.MoveTowards(transform.position, playerJoint.position, distance);
-        joint.anchor = transform.InverseTransformPoint(anchorPoint);
-        joint.connectedAnchor = anchorPoint;
+        orgDistance = distance;
+        //direction = (playerJoint.position - transform.position).normalized;
+        //Vector3 anchorPoint = Vector3.MoveTowards(transform.position, playerJoint.position, distance);
+        Vector3 fixedVector = rig.transform.InverseTransformPoint(transform.position);
+        fixedVector = new Vector3(fixedVector.x * 100, fixedVector.y * 100 - 99, fixedVector.z * 100);
+        joint.connectedAnchor = fixedVector;
 
+    }
+
+    public void UpdateGrab(float distance)
+    {
+        float deltaDistance = orgDistance - distance;
+        Vector3 newAnchorPoint = Vector3.MoveTowards(joint.connectedAnchor, playerJoint.position, deltaDistance * 100);
+        joint.connectedAnchor = newAnchorPoint;
+        orgDistance = distance;
     }
 
     public void Release()
@@ -52,6 +61,6 @@ public class GrabPoint : MonoBehaviour
     void OnDrawGizmos() {
         if (!draw) return;
         Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(joint.anchor, 0.2f);
+        Gizmos.DrawSphere(joint.connectedAnchor, 0.2f);
     }
 }
