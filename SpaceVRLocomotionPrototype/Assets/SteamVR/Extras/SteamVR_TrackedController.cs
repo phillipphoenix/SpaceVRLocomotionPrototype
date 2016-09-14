@@ -9,7 +9,13 @@ public struct ClickedEventArgs
     public float padX, padY;
 }
 
+public struct TriggerValueArgs {
+    public uint controllerIndex;
+    public float value;
+}
+
 public delegate void ClickedEventHandler(object sender, ClickedEventArgs e);
+public delegate void TriggerValueEventHandler(object sender, TriggerValueArgs e);
 
 public class SteamVR_TrackedController : MonoBehaviour
 {
@@ -33,6 +39,7 @@ public class SteamVR_TrackedController : MonoBehaviour
     public event ClickedEventHandler PadUntouched;
     public event ClickedEventHandler Gripped;
     public event ClickedEventHandler Ungripped;
+    public event TriggerValueEventHandler TriggerUsed;
 
     // Use this for initialization
     void Start()
@@ -133,7 +140,14 @@ public class SteamVR_TrackedController : MonoBehaviour
 		var system = OpenVR.System;
 		if (system != null && system.GetControllerState(controllerIndex, ref controllerState))
 		{
-			ulong trigger = controllerState.ulButtonPressed & (1UL << ((int)EVRButtonId.k_EButton_SteamVR_Trigger));
+            ulong trigger = controllerState.ulButtonPressed & (1UL << ((int)EVRButtonId.k_EButton_SteamVR_Trigger));
+		    if (controllerState.rAxis1.x > 0)
+		    {
+		        TriggerValueArgs e;
+		        e.controllerIndex = controllerIndex;
+		        e.value = controllerState.rAxis1.x;
+                TriggerUsed(this, e);
+		    }
             if (trigger > 0L && !triggerPressed)
             {
                 triggerPressed = true;

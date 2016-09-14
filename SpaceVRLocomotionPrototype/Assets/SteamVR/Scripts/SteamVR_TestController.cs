@@ -23,13 +23,13 @@ public class SteamVR_TestController : MonoBehaviour
 		var connected = (bool)args[1];
 		if (connected)
 		{
-			Debug.Log(string.Format("Controller {0} connected.", index));
+			Debug.Log(string.Format("controller {0} connected.", index));
 			PrintControllerStatus(index);
 			controllerIndices.Add(index);
 		}
 		else
 		{
-			Debug.Log(string.Format("Controller {0} disconnected.", index));
+			Debug.Log(string.Format("controller {0} disconnected.", index));
 			PrintControllerStatus(index);
 			controllerIndices.Remove(index);
 		}
